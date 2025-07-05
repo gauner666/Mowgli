@@ -55,22 +55,6 @@ extern "C"
 
 #define OPTION_ULTRASONIC 0
 #define OPTION_BUMPER 0
-#elif defined(BOARD_LUV1000RI) // TODO: This currently can't be selected via platformio
-#define PANEL_TYPE PANEL_TYPE_YARDFORCE_LUV1000RI
-#define BLADEMOTOR_LENGTH_RECEIVED_MSG 14
-
-#define DEBUG_TYPE 0
-
-#define OPTION_ULTRASONIC 1
-#define OPTION_BUMPER 0
-
-#define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
-#define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
-#define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
-#define WHEEL_BASE 0.285   // The distance between the center of the wheels in meters
-
-#define BOARD_HAS_MASTER_USART 0
-
 
 //#define I_DONT_NEED_MY_FINGERS              1      // disables EmergencyController() (no wheel lift, or tilt sensing and stopping the blade anymore)
 
@@ -168,11 +152,7 @@ extern "C"
 #define WHEEL_LIFT_RED_PORT GPIOD
 
 /* Play button - (LOW when pressed) */
-#if BOARD_YARDFORCE500_VARIANT_B
 #define PLAY_BUTTON_PIN GPIO_PIN_9
-#else
-#define PLAY_BUTTON_PIN GPIO_PIN_7
-#endif
 #define PLAY_BUTTON_PORT GPIOC
 #define PLAY_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
