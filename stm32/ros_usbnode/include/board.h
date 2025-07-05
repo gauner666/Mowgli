@@ -252,10 +252,6 @@ extern "C"
 #define SOFT_I2C_GPIO_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE();
 #endif
 
-#if !VALID_BOARD_DEFINED
-#error "No valid board has been defined, this likely is a mismatch between this file and platformio.ini"
-#endif
-
 #ifdef __cplusplus
 }
 #endif
