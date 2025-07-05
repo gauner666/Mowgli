@@ -27,6 +27,7 @@ extern "C"
 
 /* Publish Mowgli Topics */
 //#define ROS_PUBLISH_MOWGLI
+#define BOARD_YARDFORCE500_VARIANT_B 1
 
 /* different type of panel are possible */
 #define PANEL_TYPE_NONE 0
