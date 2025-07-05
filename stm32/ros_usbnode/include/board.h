@@ -35,27 +35,7 @@ extern "C"
 #define PANEL_TYPE_YARDFORCE_LUV1000RI 2
 #define PANEL_TYPE_YARDFORCE_900_ECO 3
 
-#if BOARD_YARDFORCE500_VARIANT_ORIG
-///////////////////////////
-// Yardforce 500 CLASSIC //
-///////////////////////////
-#define BLADEMOTOR_USART_INSTANCE USART3
 
-#define VALID_BOARD_DEFINED 1
-#define PANEL_TYPE PANEL_TYPE_YARDFORCE_500_CLASSIC
-#define BLADEMOTOR_LENGTH_RECEIVED_MSG 16
-#define DEBUG_TYPE DEBUG_TYPE_UART
-
-#define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
-#define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
-#define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
-#define WHEEL_BASE  0.325		// The distance between the center of the wheels in meters
-
-#define OPTION_ULTRASONIC 0
-#define OPTION_BUMPER 0
-
-#define BOARD_HAS_MASTER_USART 1
-#elif BOARD_YARDFORCE500_VARIANT_B
 /////////////////////
 // Yardforce 500 B //
 /////////////////////
@@ -90,7 +70,7 @@ extern "C"
 #define WHEEL_BASE 0.285   // The distance between the center of the wheels in meters
 
 #define BOARD_HAS_MASTER_USART 0
-#endif
+
 
 //#define I_DONT_NEED_MY_FINGERS              1      // disables EmergencyController() (no wheel lift, or tilt sensing and stopping the blade anymore)
 
@@ -257,17 +237,6 @@ extern "C"
 #endif
 
 #ifdef BLADEMOTOR_USART_ENABLED
-#if BOARD_YARDFORCE500_VARIANT_ORIG
-/* blade motor PAC 5223 (USART3) */
-#define BLADEMOTOR_USART_RX_PIN GPIO_PIN_11
-#define BLADEMOTOR_USART_RX_PORT GPIOB
-
-#define BLADEMOTOR_USART_TX_PIN GPIO_PIN_10
-#define BLADEMOTOR_USART_TX_PORT GPIOB
-
-#define BLADEMOTOR_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE()
-#define BLADEMOTOR_USART_USART_CLK_ENABLE() __HAL_RCC_USART3_CLK_ENABLE()
-#elif BOARD_YARDFORCE500_VARIANT_B
 /* blade motor PAC 5223 (USART6) */
 #define BLADEMOTOR_USART_RX_PIN GPIO_PIN_7
 #define BLADEMOTOR_USART_RX_PORT GPIOC
@@ -277,7 +246,6 @@ extern "C"
 
 #define BLADEMOTOR_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 #define BLADEMOTOR_USART_USART_CLK_ENABLE() __HAL_RCC_USART6_CLK_ENABLE()
-#endif
 #endif
 
 #ifdef PANEL_USART_ENABLED
