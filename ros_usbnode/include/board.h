@@ -26,7 +26,7 @@ extern "C"
 #define DEBUG_TYPE_SWO 2
 
 /* Publish Mowgli Topics */
-//#define ROS_PUBLISH_MOWGLI
+#define ROS_PUBLISH_MOWGLI
 #define BOARD_YARDFORCE500_VARIANT_B 1
 
 /* different type of panel are possible */
@@ -65,7 +65,7 @@ extern "C"
 /// Default max battery voltage allowed
 #define BAT_CHARGE_CUTOFF_VOLTAGE  28.0f
 /// We consider the battery is full when in CV mode the current below 0.1A
-#define CHARGE_END_LIMIT_CURRENT 0.08f
+#define CHARGE_END_LIMIT_CURRENT 0.4f
 // if voltage is greater than this assume we are docked
 #define MIN_DOCKED_VOLTAGE 20.0f
 // if voltage is lower this assume battery is disconnected
@@ -97,6 +97,8 @@ extern "C"
 //#define DISABLE_WT901
 
 // we use J18 (Red 9 pin connector as Master Serial Port)
+//#define BOARD_HAS_MASTER_USART 1
+//#define MASTER_J6 1
 #define MASTER_J18 1
 
 // enable Drive and Blade Motor UARTS
