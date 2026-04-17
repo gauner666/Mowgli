@@ -26,8 +26,7 @@ extern "C"
 #define DEBUG_TYPE_SWO 2
 
 /* Publish Mowgli Topics */
-#define ROS_PUBLISH_MOWGLI
-#define BOARD_YARDFORCE500_VARIANT_B 1
+//#define ROS_PUBLISH_MOWGLI
 
 /* different type of panel are possible */
 #define PANEL_TYPE_NONE 0
@@ -35,7 +34,27 @@ extern "C"
 #define PANEL_TYPE_YARDFORCE_LUV1000RI 2
 #define PANEL_TYPE_YARDFORCE_900_ECO 3
 
+#if BOARD_YARDFORCE500_VARIANT_ORIG
+///////////////////////////
+// Yardforce 500 CLASSIC //
+///////////////////////////
+#define BLADEMOTOR_USART_INSTANCE USART3
 
+#define VALID_BOARD_DEFINED 1
+#define PANEL_TYPE PANEL_TYPE_YARDFORCE_500_CLASSIC
+#define BLADEMOTOR_LENGTH_RECEIVED_MSG 16
+#define DEBUG_TYPE DEBUG_TYPE_UART
+
+#define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
+#define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
+#define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
+#define WHEEL_BASE  0.325		// The distance between the center of the wheels in meters
+
+#define OPTION_ULTRASONIC 0
+#define OPTION_BUMPER 0
+
+#define BOARD_HAS_MASTER_USART 1
+#elif BOARD_YARDFORCE500_VARIANT_B
 /////////////////////
 // Yardforce 500 B //
 /////////////////////
@@ -48,24 +67,43 @@ extern "C"
 #define BLADEMOTOR_LENGTH_RECEIVED_MSG 16
 #define DEBUG_TYPE DEBUG_TYPE_SWO
 
-#define MAX_MPS 0.8		  // Allow maximum speed of 0.8 m/s
-#define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
+#define MAX_MPS 0.4		  // Allow maximum speed of 1.0 m/s
+#define PWM_PER_MPS 310.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
 #define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
 #define WHEEL_BASE  0.325		// The distance between the center of the wheels in meters
 
 #define OPTION_ULTRASONIC 0
 #define OPTION_BUMPER 0
+#elif defined(BOARD_LUV1000RI) // TODO: This currently can't be selected via platformio
+#define PANEL_TYPE PANEL_TYPE_YARDFORCE_LUV1000RI
+#define BLADEMOTOR_LENGTH_RECEIVED_MSG 14
+
+#define DEBUG_TYPE 0
+
+#define OPTION_ULTRASONIC 1
+#define OPTION_BUMPER 0
+
+#define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
+#define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
+#define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
+#define WHEEL_BASE 0.285   // The distance between the center of the wheels in meters
+
+#define BOARD_HAS_MASTER_USART 0
+#endif
 
 //#define I_DONT_NEED_MY_FINGERS              1      // disables EmergencyController() (no wheel lift, or tilt sensing and stopping the blade anymore)
 
+
 /// nominal max charge current is 1.0 Amp
 #define MAX_CHARGE_CURRENT 1.0f
+/// limite voltag when switching in 150mA mode
+#define LIMIT_VOLTAGE_150MA 28.0f
 /// Max voltage allowed 29.4
-#define MAX_CHARGE_VOLTAGE 29.4f
-/// Default max battery voltage allowed
-#define BAT_CHARGE_CUTOFF_VOLTAGE  28.0f
+#define MAX_CHARGE_VOLTAGE 29.0f
+/// Max battery voltage allowed
+#define BAT_CHARGE_CUTOFF_VOLTAGE 28.0f
 /// We consider the battery is full when in CV mode the current below 0.1A
-#define CHARGE_END_LIMIT_CURRENT 0.4f
+#define CHARGE_END_LIMIT_CURRENT 0.08f
 // if voltage is greater than this assume we are docked
 #define MIN_DOCKED_VOLTAGE 20.0f
 // if voltage is lower this assume battery is disconnected
@@ -78,7 +116,7 @@ extern "C"
 
 // Emergency sensor timeouts
 #define ONE_WHEEL_LIFT_EMERGENCY_MILLIS 10000
-#define BOTH_WHEELS_LIFT_EMERGENCY_MILLIS 1000
+#define BOTH_WHEELS_LIFT_EMERGENCY_MILLIS 2000
 #define TILT_EMERGENCY_MILLIS 500 // used for both the mechanical and accelerometer based detection
 #define STOP_BUTTON_EMERGENCY_MILLIS 100
 #define PLAY_BUTTON_CLEAR_EMERGENCY_MILLIS 2000
@@ -97,8 +135,6 @@ extern "C"
 //#define DISABLE_WT901
 
 // we use J18 (Red 9 pin connector as Master Serial Port)
-//#define BOARD_HAS_MASTER_USART 1
-//#define MASTER_J6 1
 #define MASTER_J18 1
 
 // enable Drive and Blade Motor UARTS
@@ -154,7 +190,11 @@ extern "C"
 #define WHEEL_LIFT_RED_PORT GPIOD
 
 /* Play button - (LOW when pressed) */
+#if BOARD_YARDFORCE500_VARIANT_B
 #define PLAY_BUTTON_PIN GPIO_PIN_9
+#else
+#define PLAY_BUTTON_PIN GPIO_PIN_7
+#endif
 #define PLAY_BUTTON_PORT GPIOC
 #define PLAY_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
@@ -219,6 +259,17 @@ extern "C"
 #endif
 
 #ifdef BLADEMOTOR_USART_ENABLED
+#if BOARD_YARDFORCE500_VARIANT_ORIG
+/* blade motor PAC 5223 (USART3) */
+#define BLADEMOTOR_USART_RX_PIN GPIO_PIN_11
+#define BLADEMOTOR_USART_RX_PORT GPIOB
+
+#define BLADEMOTOR_USART_TX_PIN GPIO_PIN_10
+#define BLADEMOTOR_USART_TX_PORT GPIOB
+
+#define BLADEMOTOR_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE()
+#define BLADEMOTOR_USART_USART_CLK_ENABLE() __HAL_RCC_USART3_CLK_ENABLE()
+#elif BOARD_YARDFORCE500_VARIANT_B
 /* blade motor PAC 5223 (USART6) */
 #define BLADEMOTOR_USART_RX_PIN GPIO_PIN_7
 #define BLADEMOTOR_USART_RX_PORT GPIOC
@@ -228,6 +279,7 @@ extern "C"
 
 #define BLADEMOTOR_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 #define BLADEMOTOR_USART_USART_CLK_ENABLE() __HAL_RCC_USART6_CLK_ENABLE()
+#endif
 #endif
 
 #ifdef PANEL_USART_ENABLED
@@ -252,6 +304,10 @@ extern "C"
 #define SOFT_I2C_SDA_PORT GPIOB
 
 #define SOFT_I2C_GPIO_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE();
+#endif
+
+#if !VALID_BOARD_DEFINED
+#error "No valid board has been defined, this likely is a mismatch between this file and platformio.ini"
 #endif
 
 #ifdef __cplusplus
